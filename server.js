@@ -8,7 +8,10 @@ const { initSocket } = require('./sockets/trackerSocket');
 dotenv.config();
 
 // Connect to database
+<<<<<<< HEAD
 // Connect to database
+=======
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
 connectDB();
 
 const app = express();
@@ -22,10 +25,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/vehicles', require('./routes/vehicle'));
 app.use('/api/deliveries', require('./routes/delivery'));
+<<<<<<< HEAD
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/profile', require('./routes/profile'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/driver', require('./routes/driver'));
+=======
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
 
 // Health check
 app.get('/api/health', (req, res) => {

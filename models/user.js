@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+<<<<<<< HEAD
   profilePicture: {
     type: String,
     default: 'https://ui-avatars.com/api/?name=User&background=667eea&color=fff&size=200',
@@ -71,6 +72,8 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+=======
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
   createdAt: {
     type: Date,
     default: Date.now,

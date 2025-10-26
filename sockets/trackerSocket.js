@@ -18,6 +18,7 @@ const initSocket = (server) => {
     // Driver joins their tracking room
     socket.on('join-driver-room', (driverId) => {
       socket.join(`driver-${driverId}`);
+<<<<<<< HEAD
       socket.join(`driver:${driverId}`); // New format for notifications
       socket.join('drivers'); // General drivers room
       console.log(`Driver ${driverId} joined room`);
@@ -27,6 +28,9 @@ const initSocket = (server) => {
         driverId,
         timestamp: new Date().toISOString(),
       });
+=======
+      console.log(`Driver ${driverId} joined room`);
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
     });
 
     // Customer joins delivery tracking room
@@ -106,8 +110,12 @@ const initSocket = (server) => {
       try {
         const { deliveryId, status, notes } = data;
 
+<<<<<<< HEAD
         const delivery = await Delivery.findById(deliveryId)
           .populate('customer', '_id');
+=======
+        const delivery = await Delivery.findById(deliveryId);
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
         if (!delivery) {
           socket.emit('error', { message: 'Delivery not found' });
           return;
@@ -137,6 +145,7 @@ const initSocket = (server) => {
           timestamp: new Date(),
         });
 
+<<<<<<< HEAD
         // Emit to customer room (customer dashboard)
         if (delivery.customer) {
           io.to(`customer-${delivery.customer._id}`).emit('delivery-status-update', {
@@ -148,6 +157,8 @@ const initSocket = (server) => {
           });
         }
 
+=======
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
         // Emit to admin room
         io.to('admin-room').emit('delivery-status-update', {
           deliveryId,
@@ -162,12 +173,15 @@ const initSocket = (server) => {
       }
     });
 
+<<<<<<< HEAD
     // Customer joins their own room
     socket.on('join-customer-room', (customerId) => {
       socket.join(`customer-${customerId}`);
       console.log(`Customer ${customerId} joined their room`);
     });
 
+=======
+>>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
     // Handle driver availability updates
     socket.on('update-driver-status', async (data) => {
       try {
