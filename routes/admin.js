@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roles');
 const {
+  getDashboardOverview,
   getAllDrivers,
   createDriver,
   updateDriver,
@@ -15,6 +16,9 @@ const {
 // Protect all admin routes
 router.use(protect);
 router.use(authorize('admin'));
+
+// Dashboard overview
+router.get('/dashboard', getDashboardOverview);
 
 // Driver management routes
 router.get('/drivers', getAllDrivers);

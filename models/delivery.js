@@ -53,15 +53,12 @@ const deliverySchema = new mongoose.Schema({
   actualDeliveryTime: {
     type: Date,
   },
-<<<<<<< HEAD
   deliveredAt: {
     type: Date,
   },
   assignedAt: {
     type: Date,
   },
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
   packageDetails: {
     description: String,
     weight: Number,
@@ -71,7 +68,6 @@ const deliverySchema = new mongoose.Schema({
       height: Number,
     },
   },
-<<<<<<< HEAD
   vehicleType: {
     type: String,
   },
@@ -87,8 +83,6 @@ const deliverySchema = new mongoose.Schema({
       default: 'pending',
     },
   },
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
   trackingUpdates: [{
     status: String,
     timestamp: {

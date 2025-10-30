@@ -2,6 +2,7 @@ const Delivery = require('../models/delivery');
 const Vehicle = require('../models/vehicle');
 const User = require('../models/user');
 const Tracking = require('../models/tracking');
+const { getIO } = require('../sockets/trackerSocket');
 
 // @desc    Get all deliveries
 // @route   GET /api/deliveries
@@ -75,6 +76,9 @@ const createDelivery = async (req, res) => {
     scheduledPickupTime,
     scheduledDeliveryTime,
     packageDetails,
+    vehicleType,
+    distance,
+    payment,
   } = req.body;
 
   try {
@@ -85,14 +89,35 @@ const createDelivery = async (req, res) => {
       scheduledPickupTime,
       scheduledDeliveryTime,
       packageDetails,
+      vehicleType,
+      distance,
+      payment,
     });
 
     if (delivery) {
+      // Populate customer details for socket emission
+      await delivery.populate('customer', 'name email phone');
+      
+      // Emit Socket.IO event to admin room
+      try {
+        const io = getIO();
+        io.to('admin-room').emit('new-booking', {
+          delivery: delivery.toObject(),
+          timestamp: new Date().toISOString(),
+          message: `New booking created by ${delivery.customer.name}`,
+        });
+        console.log('New booking emitted to admin room:', delivery._id);
+      } catch (socketError) {
+        console.error('Socket.IO emit error:', socketError);
+        // Don't fail the request if socket emit fails
+      }
+
       res.status(201).json(delivery);
     } else {
       res.status(400).json({ message: 'Invalid delivery data' });
     }
   } catch (error) {
+    console.error('Create delivery error:', error);
     res.status(500).json({ message: error.message });
   }
 };

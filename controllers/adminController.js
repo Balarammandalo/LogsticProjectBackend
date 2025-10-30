@@ -1,6 +1,82 @@
 const User = require('../models/user');
 const Delivery = require('../models/delivery');
+const Vehicle = require('../models/vehicle');
 const { getIO } = require('../sockets/trackerSocket');
+
+// @desc    Get dashboard overview statistics
+// @route   GET /api/admin/dashboard
+// @access  Private/Admin
+exports.getDashboardOverview = async (req, res) => {
+  try {
+    // Get all statistics in parallel
+    const [
+      totalBookings,
+      activeDeliveries,
+      completedDeliveries,
+      pendingBookings,
+      totalVehicles,
+      availableVehicles,
+      totalDrivers,
+      activeDrivers,
+      recentBookings
+    ] = await Promise.all([
+      Delivery.countDocuments(),
+      Delivery.countDocuments({ status: { $in: ['assigned', 'on-route', 'picked-up'] } }),
+      Delivery.countDocuments({ status: 'delivered' }),
+      Delivery.countDocuments({ status: 'pending' }),
+      Vehicle.countDocuments(),
+      Vehicle.countDocuments({ status: 'available' }),
+      User.countDocuments({ role: 'driver' }),
+      User.countDocuments({ role: 'driver', status: 'active' }),
+      Delivery.find()
+        .populate('customer', 'name email')
+        .populate('driver', 'name')
+        .sort({ createdAt: -1 })
+        .limit(5)
+    ]);
+
+    // Calculate revenue (sum of all paid deliveries)
+    const revenueResult = await Delivery.aggregate([
+      { $match: { 'payment.status': 'paid' } },
+      { $group: { _id: null, total: { $sum: '$payment.amount' } } }
+    ]);
+    const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
+
+    res.json({
+      success: true,
+      data: {
+        bookings: {
+          total: totalBookings,
+          active: activeDeliveries,
+          completed: completedDeliveries,
+          pending: pendingBookings,
+        },
+        vehicles: {
+          total: totalVehicles,
+          available: availableVehicles,
+          busy: totalVehicles - availableVehicles,
+        },
+        drivers: {
+          total: totalDrivers,
+          active: activeDrivers,
+          busy: totalDrivers - activeDrivers,
+        },
+        revenue: {
+          total: totalRevenue,
+        },
+        recentBookings,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Get dashboard overview error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch dashboard overview',
+      error: error.message,
+    });
+  }
+};
 
 // @desc    Get all drivers
 // @route   GET /api/admin/drivers

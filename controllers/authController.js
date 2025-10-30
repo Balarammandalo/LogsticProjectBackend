@@ -1,8 +1,5 @@
 const User = require('../models/user');
-<<<<<<< HEAD
 const Delivery = require('../models/delivery');
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
 const jwt = require('jsonwebtoken');
 
 // Generate JWT Token
@@ -42,7 +39,6 @@ const register = async (req, res) => {
         role: user.role,
         phone: user.phone,
         address: user.address,
-<<<<<<< HEAD
         ...(user.role === 'driver' && {
           totalDeliveries: user.totalDeliveries,
           completedDeliveries: user.completedDeliveries,
@@ -51,8 +47,6 @@ const register = async (req, res) => {
           totalPayments: user.totalPayments,
           averageRating: user.averageRating,
         }),
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
         token: generateToken(user._id),
       });
     } else {
@@ -80,7 +74,6 @@ const login = async (req, res) => {
         role: user.role,
         phone: user.phone,
         address: user.address,
-<<<<<<< HEAD
         ...(user.role === 'driver' && {
           totalDeliveries: user.totalDeliveries,
           completedDeliveries: user.completedDeliveries,
@@ -89,8 +82,6 @@ const login = async (req, res) => {
           totalPayments: user.totalPayments,
           averageRating: user.averageRating,
         }),
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
         token: generateToken(user._id),
       });
     } else {
@@ -109,18 +100,13 @@ const getProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
-<<<<<<< HEAD
       const profile = {
-=======
-      res.json({
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
         phone: user.phone,
         address: user.address,
-<<<<<<< HEAD
       };
 
       // Include driver stats if user is a driver
@@ -175,8 +161,6 @@ const getDriverStats = async (req, res) => {
         totalEarnings: user.totalEarnings,
         totalPayments: user.totalPayments,
         averageRating: user.averageRating,
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -190,8 +174,5 @@ module.exports = {
   register,
   login,
   getProfile,
-<<<<<<< HEAD
   getDriverStats,
-=======
->>>>>>> b72fee63b630eb7d53463ed14994a82c69694bf3
 };
